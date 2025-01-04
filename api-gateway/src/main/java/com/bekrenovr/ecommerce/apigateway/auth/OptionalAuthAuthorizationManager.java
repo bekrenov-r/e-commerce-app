@@ -25,13 +25,13 @@ public class OptionalAuthAuthorizationManager implements ReactiveAuthorizationMa
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
         return authentication
                 .map(auth -> {
-                    boolean granted = requiredAuthoritiesIfAuthenticated.isEmpty() || hasAnyAuthority(auth);
+                    boolean granted = requiredAuthoritiesIfAuthenticated.isEmpty() || hasAnyRequiredAuthority(auth);
                     return new AuthorizationDecision(granted);
                 })
                 .defaultIfEmpty(new AuthorizationDecision(true));
     }
 
-    private boolean hasAnyAuthority(Authentication authentication){
+    private boolean hasAnyRequiredAuthority(Authentication authentication){
         return authentication.getAuthorities().stream()
                 .anyMatch(authority -> requiredAuthoritiesIfAuthenticated.contains(authority));
     }

@@ -2,6 +2,7 @@ package com.bekrenovr.ecommerce.orders.cart;
 
 import com.bekrenovr.ecommerce.common.model.entity.AbstractEntity;
 import com.bekrenovr.ecommerce.orders.order.itementry.ItemEntry;
+import com.bekrenovr.ecommerce.orders.order.itementry.ItemEntryRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,4 +28,12 @@ public class Cart extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "item_entry_id")
     )
     private List<ItemEntry> itemEntries;
+
+    public boolean hasItemEntry(ItemEntryRequest itemEntry) {
+        return itemEntries.stream()
+                .anyMatch(
+                        cartItemEntry -> cartItemEntry.getItemId().equals(itemEntry.itemId())
+                                && cartItemEntry.getItemSize().equals(itemEntry.size())
+                );
+    }
 }

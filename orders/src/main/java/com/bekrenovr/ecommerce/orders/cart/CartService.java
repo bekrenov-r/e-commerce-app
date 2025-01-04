@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.bekrenovr.ecommerce.orders.exception.OrdersApplicationExceptionReason.CART_ENTRY_NOT_FOUND;
+import static com.bekrenovr.ecommerce.orders.exception.OrdersApplicationExceptionReason.ITEM_ALREADY_IN_CART;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,9 @@ public class CartService {
 
     public void addItemToCart(ItemEntryRequest request) {
         Cart cart = getOrCreateCart();
+        if(cart.hasItemEntry(request)) {
+            throw new EcommerceApplicationException(ITEM_ALREADY_IN_CART);
+        }
         CatalogItem item = catalogProxy.getItemById(request.itemId()).getBody();
         ItemEntryValidator.validateEntryAgainstCatalogItem(request, item);
         ItemEntry itemEntry = itemEntryMapper.itemResponseToEntity(item, request.quantity(), request.size());
