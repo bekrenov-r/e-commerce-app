@@ -1,16 +1,20 @@
 package com.bekrenovr.ecommerce.catalog.integration;
 
+import com.bekrenovr.ecommerce.catalog.item.ItemDetailedResponse;
 import com.bekrenovr.ecommerce.catalog.item.filters.Color;
 import com.bekrenovr.ecommerce.catalog.item.filters.Gender;
 import com.bekrenovr.ecommerce.catalog.item.filters.Material;
 import com.bekrenovr.ecommerce.catalog.item.filters.Season;
 import com.bekrenovr.ecommerce.catalog.item.sorting.SortOption;
+import jakarta.ws.rs.core.MediaType;
+import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -150,6 +154,61 @@ public class ItemIT {
                     .toUri();
 
             ResponseEntity<Object> response = restTemplate.getForEntity(uri, Object.class);
+
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+        }
+    }
+
+    @Nested
+    class Update {
+        static final String URI_MAPPING = "/items";
+
+        @Test
+        void shouldReturn200_whenUpdatingItem() {
+            String itemId = "af535b75-4050-4db3-bcde-5da06ddb2ae2";
+            URI uri = UriComponentsBuilder.fromPath(URI_MAPPING + "/" + itemId).build().toUri();
+            Object body = """
+                    {
+                      "name": "Test",
+                      "description": "asd",
+                      "price": 10000000,
+                      "discount": 0.3,
+                      "categoryId": "c893d218-7b2d-4d8b-a41e-9e42de9cfc9f",
+                      "color": "BLACK",
+                      "gender": "MEN",
+                      "brandId": "26f7679f-2e79-4d62-bdfd-601534e312e1",
+                      "material": "COTTON",
+                      "season": "AUTUMN",
+                      "itemCode": "BXM50961",
+                      "uniqueItems": [
+                        {
+                            "size": "XS",
+                            "quantity": 15
+                        },
+                        {
+                            "size": "S",
+                            "quantity": 10
+                        },
+                        {
+                            "size": "M",
+                            "quantity": 10
+                        },
+                        {
+                            "size": "L",
+                            "quantity": 10
+                        },
+                        {
+                            "size": "XL",
+                            "quantity": 10
+                        }
+                      ]
+                    }
+                    """;
+            RequestEntity<Object> request = RequestEntity.put(uri)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                    .body(body);
+
+            ResponseEntity<ItemDetailedResponse> response = restTemplate.exchange(request, ItemDetailedResponse.class);
 
             assertEquals(HttpStatus.OK, response.getStatusCode());
         }

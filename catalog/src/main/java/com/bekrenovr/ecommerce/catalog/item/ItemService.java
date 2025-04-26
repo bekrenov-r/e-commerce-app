@@ -84,6 +84,7 @@ public class ItemService {
 
     public ItemDetailedResponse update(UUID id, ItemRequest request) {
         Item item = itemRepository.findByIdOrThrowDefault(id);
+
         item.setName(request.name());
         item.setDescription(request.description());
         item.setPrice(request.price());
@@ -94,9 +95,11 @@ public class ItemService {
         item.setMaterial(request.material());
         item.setSeason(request.season());
         item.setItemCode(request.itemCode());
+
+        UUID subcategoryId = Objects.nonNull(item.getSubcategory()) ? item.getSubcategory().getId() : null;
         if(!item.getCategory().getId().equals(request.categoryId())) {
             this.updateCategoryAndSubcategory(item, request.categoryId(), request.subcategoryId());
-        } else if(!Objects.equals(item.getSubcategory().getId(), request.subcategoryId())) {
+        } else if(!Objects.equals(subcategoryId, request.subcategoryId())) {
             this.updateSubcategory(item, request.subcategoryId());
         }
         if(!item.getBrand().getId().equals(request.brandId())) {

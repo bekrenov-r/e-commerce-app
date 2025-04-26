@@ -96,7 +96,6 @@ public class ItemController {
                     schema = @Schema(implementation = ProblemDetail.class)))
     @PutMapping("/{id}")
     public ResponseEntity<ItemDetailedResponse> update(@PathVariable UUID id, @RequestBody @Valid ItemRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(itemService.update(id, request));
+        return ResponseEntity.ok(itemService.update(id, request));
     }
 }

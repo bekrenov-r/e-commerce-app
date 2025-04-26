@@ -35,10 +35,7 @@ public class CustomerService {
                         throw new EcommerceApplicationException(EMAIL_ALREADY_EXISTS, request.getEmail());
                     }
                 }).orElseGet(() -> {
-                    Customer customer = customerMapper.requestToEntity(request);
-                    customer.setRegistered(request.isRegistered());
-                    customer.setCreatedAt(LocalDateTime.now());
-                    customerRepository.save(customer);
+                    saveCustomer(request);
                     return HttpStatus.CREATED;
                 });
     }
@@ -49,5 +46,12 @@ public class CustomerService {
         customer.setLastName(request.getLastName());
         customerRepository.save(customer);
         return customerMapper.customerToResponse(customer);
+    }
+
+    private void saveCustomer(CustomerRequest request) {
+        Customer customer = customerMapper.requestToEntity(request);
+        customer.setRegistered(request.isRegistered());
+        customer.setCreatedAt(LocalDateTime.now());
+        customerRepository.save(customer);
     }
 }

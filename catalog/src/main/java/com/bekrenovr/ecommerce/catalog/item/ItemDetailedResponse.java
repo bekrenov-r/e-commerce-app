@@ -3,6 +3,8 @@ package com.bekrenovr.ecommerce.catalog.item;
 import com.bekrenovr.ecommerce.catalog.category.CategoryResponse;
 import com.bekrenovr.ecommerce.catalog.item.filters.Color;
 import com.bekrenovr.ecommerce.catalog.item.filters.Gender;
+import com.bekrenovr.ecommerce.catalog.item.filters.Material;
+import com.bekrenovr.ecommerce.catalog.item.filters.Season;
 import com.bekrenovr.ecommerce.catalog.item.metadata.ItemMetadata;
 import com.bekrenovr.ecommerce.catalog.item.uniqueitem.UniqueItemDTO;
 import lombok.AllArgsConstructor;
@@ -27,5 +29,7 @@ public final class ItemDetailedResponse {
     private List<UniqueItemDTO> uniqueItems;
     private String brand;
     private Double rating;
+    private Season season;
+    private Material material;
     private ItemMetadata metadata;
 }

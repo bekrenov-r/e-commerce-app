@@ -4,3 +4,5 @@ docker compose up
     - docker compose up catalog
 * Delete dbs:
     - docker compose down --volumes
+* Delete microservice images (before docker compose up):
+    - docker image prune -a --filter "label=com.docker.compose.project=e-commerce"
